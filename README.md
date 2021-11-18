@@ -1,5 +1,9 @@
 # Merit Academy Library
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/03c4ac42-fb57-4d1d-ab37-f62c914bdff0/deploy-status)](https://app.netlify.com/sites/gifted-goldstine-1b7c3c/deploys)
+
+Live site at [https://library.meritacademy.tech](https://library.meritacademy.tech).
+
 ## Setup
 
 ```bash
