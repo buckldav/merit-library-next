@@ -7,12 +7,15 @@ import { AppProps } from "next/app";
 import Head from "next/head";
 import "@fontsource/mononoki";
 import "@fontsource/lexend";
+import "@fontsource/quicksand";
+import "@fontsource/cinzel";
 
 import defaultSEOConfig from "../../next-seo.config";
 import Layout from "components/layout";
 import createEmotionCache from "styles/createEmotionCache";
 import customTheme from "styles/customTheme";
 import "styles/globals.css";
+import { AuthContext } from "../providers";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -25,6 +28,10 @@ const MyApp = ({
   pageProps,
   emotionCache = clientSideEmotionCache,
 }: MyAppProps) => {
+  const authProviderValue = {
+    user: null
+  }
+  
   return (
     <CacheProvider value={emotionCache}>
       <ChakraProvider theme={customTheme}>
@@ -35,9 +42,11 @@ const MyApp = ({
           />
         </Head>
         <DefaultSeo {...defaultSEOConfig} />
-        <Layout>
-          <Component {...pageProps} />
-        </Layout>
+        <AuthContext.Provider value={authProviderValue}>
+          <Layout>
+            <Component {...pageProps} />
+          </Layout>
+        </AuthContext.Provider>
       </ChakraProvider>
     </CacheProvider>
   );

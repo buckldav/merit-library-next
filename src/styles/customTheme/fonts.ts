@@ -1,8 +1,8 @@
 import { DeepPartial, Theme } from "@chakra-ui/react";
 
 const fonts: DeepPartial<Theme["fonts"]> = {
-  body: "Mononoki, monospace",
-  heading: "Lexend, sans-serif",
+  body: "Quicksand, sans-serif",
+  heading: "Cinzel, serif",
   mono: "Mononoki, monospace",
 };
 

@@ -14,25 +14,27 @@ import Image from "next/image";
 
 const HomePage = () => {
   return (
-    <Box mb={8} w="full">
-      <Heading as="h1" size="xl" mb={4}>
-        Home
-      </Heading>
-      <Input mb={5} placeholder="Search" />
-      <Select mb={1} placeholder="Select option">
-        <option value="all fields">All fields</option>
-        <option value="author">Author</option>
-        <option value="title">Title</option>
-        <option value="dewey decimal">Dewey decimal</option>
-        <option value="barcode">Barcode</option>
-      </Select>
-
-      <IconButton
-        colorScheme="blue"
-        aria-label="Search database"
-        icon={<SearchIcon />}
-      />
-    </Box>
+    
+        <Box mb={8} w="full" bg="white">
+          <Heading as="h1" size="xl" mb={4}>
+            HOME
+          </Heading>
+          <Input mb={5} placeholder="Search" />
+          <Select mb={1} placeholder="Select option">
+            <option value="all fields">All fields</option>
+            <option value="author">Author</option>
+            <option value="title">Title</option>
+            <option value="dewey decimal">Dewey decimal</option>
+            <option value="barcode">Barcode</option>
+          </Select>
+              
+          <IconButton
+            colorScheme="blue"
+            aria-label="Search database"
+            icon={<SearchIcon />}
+          />
+        </Box>
+      
   );
 };
 
