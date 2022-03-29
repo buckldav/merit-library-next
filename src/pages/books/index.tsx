@@ -12,12 +12,6 @@ import {
   Text,
   Link,
   Box,
-  ModalOverlay,
-  ModalContent,
-  ModalHeader,
-  ModalFooter,
-  ModalBody,
-  ModalCloseButton,
   useDisclosure,
   Flex,
   Stack,
@@ -29,13 +23,10 @@ import { Book } from "types/library";
 
 export default function Books() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [books, setBooks] = useState([]);
+  const [books, setBooks] = useState<Array<Book>>();
   const { auth } = useContext(AuthContext) as AuthContextType
 
-  function onSubmit(e: FormEvent) {
-    console.log(e)
-    onClose()
-  }
+  
 
   useEffect(() => {
     async function getBooks() {
@@ -47,25 +38,22 @@ export default function Books() {
       const books = await response.json()
       console.log(books)
       if (books instanceof Array) {
-        setBooks(books)
+        setBooks(books as Array<Book>)
       }
     }
 
     getBooks()
-  }, [])
+  }, [auth])
 
   return (
     <Box mb={8} w="full">
       <Heading as="h1" size="xl" mb={4}>
         Book list
       </Heading>
-      <Stack spacing="8" direction="row">
-        <Button colorScheme="red" onClick={onOpen}>Check out</Button>
-      </Stack>
       <Flex direction="row">
         {/*<Image src="/dino.png" width={400} height={400} />*/}
         <Box>
-          {books.map((val) => {
+          {books?.map((val) => {
             const book = val as Book;
             return (
               <Flex direction="row" margin={5}>
@@ -81,23 +69,7 @@ export default function Books() {
 
         </Box>
       </Flex>{" "}
-      <Modal isOpen={isOpen} onClose={onClose}>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Student ID</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Input placeholder="Student ID" />
-          </ModalBody>
 
-          <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
-              Close
-            </Button>
-            <Button variant="ghost" onClick={onSubmit}>Submit</Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
     </Box>
   );
 }
