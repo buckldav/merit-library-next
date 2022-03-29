@@ -36,9 +36,7 @@ const MyApp = ({
   })
 
   useEffect(() => {
-    if (auth.user.token) {
-      localStorage.setItem("auth", JSON.stringify(auth))
-    } else {
+    if (!auth.user.token) {
       const storedAuth = JSON.parse(localStorage.getItem("auth") as string)
       if (storedAuth?.user?.token) {
         setAuth(storedAuth)

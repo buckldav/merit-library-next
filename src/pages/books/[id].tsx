@@ -1,13 +1,24 @@
-import { useContext, useEffect, useState } from 'react'
+import { useContext, useEffect, useState, FormEvent } from 'react'
 import { useRouter } from 'next/router'
 //import fetch from "node-fetch"
 import {
   FormControl,
   Button,
-  Text,
+  Input,
+  Modal,
   Heading,
+  Text,
+  Link,
   Box,
+  ModalOverlay,
+  ModalContent,
+  ModalHeader,
+  ModalFooter,
+  ModalBody,
+  ModalCloseButton,
   useDisclosure,
+  Flex,
+  Stack,
 } from "@chakra-ui/react";
 import { Book } from "../../types/library"
 import { AuthContext, AuthContextType } from 'providers';
@@ -20,12 +31,22 @@ export default function BookDetail() {
   const [book, setBook] = useState<Book>()
   const { auth } = useContext(AuthContext) as AuthContextType
 
+  function onSubmit(e: FormEvent) {
+    console.log(e)
+    onClose()
+  }
+
   useEffect(() => {
     async function getBook() {
-      const { id } = router.query;
+      let { id } = router.query;
       let book = null
+      if (!id) {
+        const path = window.location.pathname.split("/")
+        id = path[path.length - 1]
+      }
       console.log("ID", id)
       if (id && (id as string).match(/^(97(8|9))?\d{9}(\d|X)$/)) {
+        console.log("Token", auth.user.token)
         try {
           const response = await fetch(process.env.API_URL + "library/books/" + id, {
             headers: {
@@ -40,8 +61,10 @@ export default function BookDetail() {
       }
     }
 
+    if (auth.user.token) {
     getBook()
-  }, [])
+    }
+  }, [auth])
 
   return (
 
@@ -57,6 +80,23 @@ export default function BookDetail() {
 
       </tr>
       </table>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Student ID</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Input placeholder="Student ID" />
+          </ModalBody>
+
+          <ModalFooter>
+            <Button colorScheme="blue" mr={3} onClick={onClose}>
+              Close
+            </Button>
+            <Button variant="ghost" onClick={onSubmit}>Submit</Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
 
   )
