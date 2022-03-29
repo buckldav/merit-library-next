@@ -1,5 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 import { EmotionCache } from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
@@ -34,6 +34,17 @@ const MyApp = ({
       token: null
     }
   })
+
+  useEffect(() => {
+    if (auth.user.token) {
+      localStorage.setItem("auth", JSON.stringify(auth))
+    } else {
+      const storedAuth = JSON.parse(localStorage.getItem("auth") as string)
+      if (storedAuth?.user?.token) {
+        setAuth(storedAuth)
+      }
+    }
+  }, [])
 
   return (
     <CacheProvider value={emotionCache}>

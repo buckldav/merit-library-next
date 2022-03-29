@@ -25,6 +25,7 @@ import {
 import { AuthContext, AuthContextType } from "../../providers"
 
 import Image from "next/image";
+import { Book } from "types/library";
 
 export default function Books() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -64,20 +65,19 @@ export default function Books() {
       <Flex direction="row">
         {/*<Image src="/dino.png" width={400} height={400} />*/}
         <Box>
-          {books.map(book => (
-
-            <Flex direction="row" margin={5}>
-              {book.image ? <img src={book.image} height={100} layout='fill' /> : <img src="/Book_Placeholder.png" layout='fill' height={100} />}
-
-              <Box margin={5}>
-                <Text fontSize={20} >{book.title}</Text>
-                <Text fontSize={15}>{book.last_name}, {book.first_name}</Text>
-                <Text fontSize={13}>Call Number: {book.call_number}</Text>
-              </Box>
-
-
-            </Flex>
-          ))}
+          {books.map((val) => {
+            const book = val as Book;
+            return (
+              <Flex direction="row" margin={5}>
+                <Link href={`/books/${book.isbn}`}>{book.image ? <img src={book.image} height={100} /> : <img src="/Book_Placeholder.png" height={100} />}</Link>
+                <Box margin={5}>
+                  <Text fontSize={20}><Link href={`/books/${book.isbn}`}>{book.title}</Link></Text>
+                  <Text fontSize={15}>{book.last_name}, {book.first_name}</Text>
+                  <Text fontSize={13}>Call Number: {book.call_number}</Text>
+                </Box>
+              </Flex>
+            )
+          })}
 
         </Box>
       </Flex>{" "}

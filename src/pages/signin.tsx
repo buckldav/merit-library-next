@@ -41,6 +41,7 @@ export default function SignIn() {
     const json = await res.json()
     console.log(json)
     setAuth({ user: json })
+    localStorage.setItem("auth", JSON.stringify({ user: json }))
   }
 
   useEffect(() => {
