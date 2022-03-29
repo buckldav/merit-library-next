@@ -2,7 +2,6 @@ import { useContext } from "react"
 import { Flex, Box } from "@chakra-ui/react";
 
 import Link from "next/link";
-import Image from "next/image";
 import { AuthContext, AuthContextType } from "providers";
 
 const navlinks = [
@@ -18,7 +17,7 @@ const Header = () => {
   return (
     <>
       <Flex as="nav" zIndex="100" position="sticky" top={0} align="center" width="full" padding="5px" bg="linear-gradient(.25turn, #870000, 70%, #162e49);" gridGap={4}>
-        <a href="/"><Image src="/logo.png" width={60} height={50} /></a>
+        <a href="/"><img src="/logo.png" width={50} height={40} /></a>
         {navlinks.map(link => (
           (link.href !== "/signin" && link.href !== "/user") ||
           (link.href === "/signin" && !auth.user.token) ||
