@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react"
+import { useEffect, useState, useContext, FormEvent } from "react"
 import {
   FormControl,
   Button,
@@ -22,26 +22,27 @@ import {
   Flex,
   Stack,
 } from "@chakra-ui/react";
+import { AuthContext, AuthContextType } from "../../providers"
 
 import Image from "next/image";
-//import { books } from "../testdb";
 
-export default function Projects() {
+export default function Books() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const[ books, setBooks] = useState([]);
+  const [books, setBooks] = useState([]);
+  const { auth } = useContext(AuthContext) as AuthContextType
 
-  function onSubmit(e) {
+  function onSubmit(e: FormEvent) {
     console.log(e)
     onClose()
   }
-  
+
   useEffect(() => {
     async function getBooks() {
-      const response = await fetch("https://meritacademy.herokuapp.com/api/library/books/", {
+      const response = await fetch(process.env.API_URL + "library/books/", {
         headers: {
-  "Authorization": "Token 4c894f241209659170e0969ecf618d1075f5f079"
+          "Authorization": `Token ${auth.user.token}`
         }
-})
+      })
       const books = await response.json()
       console.log(books)
       if (books instanceof Array) {
@@ -64,20 +65,20 @@ export default function Projects() {
         {/*<Image src="/dino.png" width={400} height={400} />*/}
         <Box>
           {books.map(book => (
-            
+
             <Flex direction="row" margin={5}>
               {book.image ? <img src={book.image} height={100} layout='fill' /> : <img src="/Book_Placeholder.png" layout='fill' height={100} />}
-              
+
               <Box margin={5}>
-          <Text  fontSize={20} >{book.title}</Text>
-          <Text fontSize={15}>{book.last_name}, {book.first_name}</Text>
-          <Text fontSize={13}>Call Number: {book.call_number}</Text>
-        </Box>
-              
-            
+                <Text fontSize={20} >{book.title}</Text>
+                <Text fontSize={15}>{book.last_name}, {book.first_name}</Text>
+                <Text fontSize={13}>Call Number: {book.call_number}</Text>
+              </Box>
+
+
             </Flex>
           ))}
-          
+
         </Box>
       </Flex>{" "}
       <Modal isOpen={isOpen} onClose={onClose}>

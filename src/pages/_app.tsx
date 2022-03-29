@@ -1,4 +1,5 @@
 /* eslint-disable react/jsx-props-no-spreading */
+import { useState } from "react";
 import { ChakraProvider } from "@chakra-ui/react";
 import { EmotionCache } from "@emotion/cache";
 import { CacheProvider } from "@emotion/react";
@@ -15,7 +16,7 @@ import Layout from "components/layout";
 import createEmotionCache from "styles/createEmotionCache";
 import customTheme from "styles/customTheme";
 import "styles/globals.css";
-import { AuthContext } from "../providers";
+import { Auth, AuthContext } from "../providers";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -28,10 +29,12 @@ const MyApp = ({
   pageProps,
   emotionCache = clientSideEmotionCache,
 }: MyAppProps) => {
-  const authProviderValue = {
-    user: null
-  }
-  
+  const [auth, setAuth] = useState<Auth>({
+    user: {
+      token: null
+    }
+  })
+
   return (
     <CacheProvider value={emotionCache}>
       <ChakraProvider theme={customTheme}>
@@ -42,7 +45,7 @@ const MyApp = ({
           />
         </Head>
         <DefaultSeo {...defaultSEOConfig} />
-        <AuthContext.Provider value={authProviderValue}>
+        <AuthContext.Provider value={{ auth, setAuth }}>
           <Layout>
             <Component {...pageProps} />
           </Layout>
