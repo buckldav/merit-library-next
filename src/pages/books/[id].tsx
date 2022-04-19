@@ -20,20 +20,85 @@ import {
   Flex,
   Stack,
 } from "@chakra-ui/react";
-import { Book } from "../../types/library"
+import { Checkout } from "../../types/library"
 import { AuthContext, AuthContextType } from 'providers';
 
+type Student = {
+  id: number;
+  email?: string;
+  first_name?: string;
+  last_name?: string;
+}
 
 export default function BookDetail() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
 
-  const [book, setBook] = useState<Book>()
+  const [book, setBook] = useState<Checkout>()
+  const [student, setStudent] = useState<Student>()
+  const [newStudent, setNewStudent] = useState<boolean>(false)
   const { auth } = useContext(AuthContext) as AuthContextType
 
-  function onSubmit(e: FormEvent) {
-    console.log(e)
-    onClose()
+  async function postStudent() {
+    const res = await fetch(process.env.API_URL + "library/students/", {
+      method: "POST",
+      body: JSON.stringify(student),
+      headers: {
+        "Authorization": `Token ${auth.user.token}`,
+        "Content-Type": "application/json"
+      }
+    })
+    const json = await res.json()
+    console.log("Student", res, json)
+  }
+
+  async function postCheckout() {
+    const checkout = {
+      book: book?.isbn,
+      student: student?.id
+    }
+    const res = await fetch(process.env.API_URL + "library/checkouts/", {
+      method: "POST",
+      body: JSON.stringify(checkout),
+      headers: {
+        "Authorization": `Token ${auth.user.token}`,
+        "Content-Type": "application/json"
+      }
+    })
+    const json = await res.json()
+    console.log(json)
+    router.push("/checkout/" + json.id)
+  }
+
+  const onSubmit = async (e: FormEvent) => {
+    console.log(process.env.API_URL)
+    e.preventDefault()
+    if (!student?.email) {
+      // get a student
+      const res = await fetch(process.env.API_URL + "library/students/" + student?.id, {
+        method: "GET",
+        headers: {
+          "Authorization": `Token ${auth.user.token}`,
+          "Content-Type": "application/json"
+        }
+      })
+      const json = await res.json()
+      console.log(json)
+      if (json.detail === "Not found.") {
+        setNewStudent(true)
+      } else {
+        // student found, post checkout
+        await postCheckout()
+        onClose()
+      }
+    } else {
+      // create student first
+      await postStudent()
+        // post a checkout
+      await postCheckout()
+      onClose()
+    }
+    
   }
 
   useEffect(() => {
@@ -54,7 +119,7 @@ export default function BookDetail() {
             }
           })
           book = await response.json()
-          setBook(book as Book)
+          setBook(book as Checkout)
         } catch (e) {
           console.error(e)
         }
@@ -86,11 +151,43 @@ export default function BookDetail() {
           <ModalHeader>Student ID</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <Input placeholder="Student ID" />
+            <label>Student ID</label>
+            <Input 
+              type="number" 
+              name="id"
+              placeholder="Student ID" 
+              onChange={(e) => {setStudent({...student, id:parseInt(e.target.value)})}} 
+            />
+            {newStudent ? <>
+              <label>first name</label>
+              <Input 
+              type="text"
+              name="first_name" 
+              placeholder="First Name" 
+              onChange={(e) => {setStudent({...student, id: student?.id || 0, first_name: e.target.value})}} 
+            />
+            <label>Last Name</label>
+            <Input 
+              type="text"
+              name="last_name" 
+              placeholder="Last Name" 
+              onChange={(e) => {setStudent({...student, id: student?.id || 0, last_name: e.target.value})}} 
+            />
+            <label>Email</label>
+            <Input 
+              type="email"
+              name="email" 
+              placeholder="Email" 
+              onChange={(e) => {setStudent({...student, id: student?.id || 0, email: e.target.value})}} 
+            />
+              
+              
+              
+            </> : null}
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={onClose}>
+            <Button colorScheme="blue" mr={3} onClick={() => { setNewStudent(false); onClose() }}>
               Close
             </Button>
             <Button variant="ghost" onClick={onSubmit}>Submit</Button>

@@ -19,11 +19,11 @@ import {
 import { AuthContext, AuthContextType } from "../../providers"
 
 import Image from "next/image";
-import { Book } from "types/library";
+import { Checkout } from "types/library";
 
 export default function Books() {
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [books, setBooks] = useState<Array<Book>>();
+  const [books, setBooks] = useState<Array<Checkout>>();
   const { auth } = useContext(AuthContext) as AuthContextType
 
   
@@ -38,7 +38,7 @@ export default function Books() {
       const books = await response.json()
       console.log(books)
       if (books instanceof Array) {
-        setBooks(books as Array<Book>)
+        setBooks(books as Array<Checkout>)
       }
     }
 
@@ -54,7 +54,7 @@ export default function Books() {
         {/*<Image src="/dino.png" width={400} height={400} />*/}
         <Box>
           {books?.map((val) => {
-            const book = val as Book;
+            const book = val as Checkout;
             return (
               <Flex direction="row" margin={5}>
                 <Link href={`/books/${book.isbn}`}>{book.image ? <img src={book.image} height={100} /> : <img src="/Book_Placeholder.png" height={100} />}</Link>

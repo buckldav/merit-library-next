@@ -11,6 +11,7 @@ import { AuthContext, AuthContextType } from "../providers"
 type Name = "username" | "password";
 
 export default function SignIn() {
+  const [error, setError] = useState(false);
   const [show, setShow] = useState(false);
   const [userData, setUserData] = useState({
     username: "",
@@ -31,17 +32,24 @@ export default function SignIn() {
   const onSubmit = async (e: FormEvent) => {
     console.log(process.env.API_URL)
     e.preventDefault()
-    const res = await fetch(process.env.API_URL + "auth-token/", {
-      method: "POST",
-      body: JSON.stringify(userData),
-      headers: {
-        "Content-Type": "application/json"
+    try {
+      const res = await fetch(process.env.API_URL + "auth-token/", {
+        method: "POST",
+        body: JSON.stringify(userData),
+        headers: {
+          "Content-Type": "application/json"
+        }
+      })
+      const json = await res.json()
+      if (res.status === 400) {
+        setError(true)
       }
-    })
-    const json = await res.json()
-    console.log(json)
-    setAuth({ user: json })
-    localStorage.setItem("auth", JSON.stringify({ user: json }))
+      console.log("JSON", json)
+      setAuth({ user: json })
+      localStorage.setItem("auth", JSON.stringify({ user: json }))
+    } catch (e) {
+      console.error(e)
+    }
   }
 
   useEffect(() => {
@@ -49,7 +57,7 @@ export default function SignIn() {
   }, [auth])
 
   return (
-    auth.user.token ? null :
+    auth.user.token ? null : <>
       <Stack spacing={3} paddingLeft="10%" paddingRight="10%">
         <Heading as="h1" size="xl" mb={4}>
           SIGN IN
@@ -89,5 +97,11 @@ export default function SignIn() {
           </VStack>
         </form>
       </Stack>
+      {error && <>
+      <br/>
+        <h1>Unable to Log In, Try Again.</h1>
+        
+      </>}
+      </>
   );
 }
