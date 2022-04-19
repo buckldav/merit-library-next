@@ -8,7 +8,12 @@ Live site at [https://library.meritacademy.tech](https://library.meritacademy.te
 
 ```bash
 npm install
+
+
 npm run dev
+
+^^^^
+runs the code
 ```
 
 ## TODO List

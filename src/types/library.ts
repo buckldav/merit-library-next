@@ -1,5 +1,5 @@
 // TODO: Add tsx types for the library django models
-export type Book = {
+export type Checkout = {
   title: string;
   pages: number;
   last_name: string;
@@ -8,6 +8,17 @@ export type Book = {
   isbn: string;
   image?: string;
   copies?: number;
+
+  //...
+};
+
+export type Checkout = {
+  
+  book: string;
+  student: number;
+  checkout_time: string;
+  due_date: string;
+  id: number;
 
   //...
 };
