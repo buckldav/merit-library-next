@@ -146,6 +146,9 @@ export default function BookDetail() {
             ) : (
               <img src="/Book_Placeholder.png" height={100} />
             )}
+            <Button as="a" href={`/books/update/${book?.isbn}`}>
+              Edit Book
+            </Button>
           </td>
           <td>
             <Heading as="h1" size="xl">
