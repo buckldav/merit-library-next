@@ -8,12 +8,14 @@ export type Book = {
   isbn: string;
   image?: string;
   copies?: number;
+};
 
-  //...
+export type BookData = {
+  call_number: string;
+  isbn: string;
 };
 
 export type Checkout = {
-  
   book: string;
   student: number;
   checkout_time: string;

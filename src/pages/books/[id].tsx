@@ -1,5 +1,5 @@
-import { useContext, useEffect, useState, FormEvent } from 'react'
-import { useRouter } from 'next/router'
+import { useContext, useEffect, useState, FormEvent } from "react";
+import { useRouter } from "next/router";
 //import fetch from "node-fetch"
 import {
   FormControl,
@@ -20,134 +20,151 @@ import {
   Flex,
   Stack,
 } from "@chakra-ui/react";
-import { Book } from "../../types/library"
-import { AuthContext, AuthContextType } from 'providers';
+import { Book } from "../../types/library";
+import { AuthContext, AuthContextType } from "providers";
 
 type Student = {
   id: number;
   email?: string;
   first_name?: string;
   last_name?: string;
-}
+};
 
 export default function BookDetail() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
 
-  const [book, setBook] = useState<Book>()
-  const [student, setStudent] = useState<Student>()
-  const [newStudent, setNewStudent] = useState<boolean>(false)
-  const { auth } = useContext(AuthContext) as AuthContextType
+  const [book, setBook] = useState<Book>();
+  const [student, setStudent] = useState<Student>();
+  const [newStudent, setNewStudent] = useState<boolean>(false);
+  const { auth } = useContext(AuthContext) as AuthContextType;
 
   async function postStudent() {
     const res = await fetch(process.env.API_URL + "library/students/", {
       method: "POST",
       body: JSON.stringify(student),
       headers: {
-        "Authorization": `Token ${auth.user.token}`,
-        "Content-Type": "application/json"
-      }
-    })
-    const json = await res.json()
-    console.log("Student", res, json)
+        Authorization: `Token ${auth.user.token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    const json = await res.json();
+    console.log("Student", res, json);
   }
 
   async function postBook() {
-    // post book to checkout
-    const bookBody = {
+    const bookData = {
       book: book?.isbn,
-      student: student?.id
-    }
-    const res = await fetch(process.env.API_URL + "library/checkouts/", {
+      student: student?.id,
+    };
+    const res = await fetch(process.env.API_URL + "library/books/", {
       method: "POST",
-      body: JSON.stringify(bookBody),
+      body: JSON.stringify(bookData),
       headers: {
-        "Authorization": `Token ${auth.user.token}`,
-        "Content-Type": "application/json"
-      }
-    })
-    console.dir(res)
-    const json = await res.json()
-    console.log("Checkout", json)
-    router.push("/book/" + json.id)
+        Authorization: `Token ${auth.user.token}`,
+        "Content-Type": "application/json",
+      },
+    });
+    const json = await res.json();
+    console.log(json);
+    router.push("/book/" + json.id);
   }
 
   const onSubmit = async (e: FormEvent) => {
-    console.log(process.env.API_URL)
-    e.preventDefault()
+    console.log(process.env.API_URL);
+    e.preventDefault();
     if (!student?.email) {
       // get a student
-      const res = await fetch(process.env.API_URL + "library/students/" + student?.id, {
-        method: "GET",
-        headers: {
-          "Authorization": `Token ${auth.user.token}`,
-          "Content-Type": "application/json"
+      const res = await fetch(
+        process.env.API_URL + "library/students/" + student?.id,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Token ${auth.user.token}`,
+            "Content-Type": "application/json",
+          },
         }
-      })
-      const json = await res.json()
-      console.log("Student", json)
+      );
+      const json = await res.json();
+      console.log(json);
       if (json.detail === "Not found.") {
-        setNewStudent(true)
+        setNewStudent(true);
       } else {
-        // student found, post Book
-        console.log("student found")
-        await postBook()
-        onClose()
+        // student found, post book
+        await postBook();
+        onClose();
       }
     } else {
       // create student first
-      await postStudent()
-        // post a Book
-      await postBook()
-      onClose()
+      await postStudent();
+      // post a book
+      await postBook();
+      onClose();
     }
-    
-  }
+  };
 
   useEffect(() => {
     async function getBook() {
       let { id } = router.query;
-      let book = null
+      let book = null;
       if (!id) {
-        const path = window.location.pathname.split("/")
-        id = path[path.length - 1]
+        const path = window.location.pathname.split("/");
+        id = path[path.length - 1];
       }
-      console.log("ID", id)
+      console.log("ID", id);
       if (id && (id as string).match(/^(97(8|9))?\d{9}(\d|X)$/)) {
-        console.log("Token", auth.user.token)
+        console.log("Token", auth.user.token);
         try {
-          const response = await fetch(process.env.API_URL + "library/books/" + id, {
-            headers: {
-              "Authorization": `Token ${auth.user.token}`
+          const response = await fetch(
+            process.env.API_URL + "library/books/" + id,
+            {
+              headers: {
+                Authorization: `Token ${auth.user.token}`,
+              },
             }
-          })
-          book = await response.json()
-          setBook(book as Book)
-          
+          );
+          book = await response.json();
+          setBook(book as Book);
         } catch (e) {
-          console.error(e)
+          console.error(e);
         }
       }
     }
 
     if (auth.user.token) {
-    getBook()
+      getBook();
     }
-  }, [auth])
+  }, [auth]);
 
   return (
-
     <Box>
-      <table><tr>
-        <td>{book?.image ? <img src={book?.image} height={100} /> : <img src="/Book_Placeholder.png" height={100} />}</td>
-        <td>
-          <Heading as="h1" size="xl">{book?.title}</Heading>
-          <Heading as="h4" size="md">{book?.last_name} {book?.first_name}</Heading>
-          <Text>call number: {book?.call_number}</Text> <br /><br /><br />
-          <Button colorScheme="red" onClick={onOpen}>Check out</Button>
-        </td>
-
-      </tr>
+      <table>
+        <tr>
+          <td>
+            {book?.image ? (
+              <img src={book?.image} height={100} />
+            ) : (
+              <img src="/Book_Placeholder.png" height={100} />
+            )}
+            <Button as="a" href={`/books/update/${book?.isbn}`}>
+              Edit Book
+            </Button>
+          </td>
+          <td>
+            <Heading as="h1" size="xl">
+              {book?.title}
+            </Heading>
+            <Heading as="h4" size="md">
+              {book?.last_name} {book?.first_name}
+            </Heading>
+            <Text>call number: {book?.call_number}</Text> <br />
+            <br />
+            <br />
+            <Button colorScheme="red" onClick={onOpen}>
+              Check out
+            </Button>
+          </td>
+        </tr>
       </table>
       <Modal isOpen={isOpen} onClose={onClose}>
         <ModalOverlay />
@@ -156,51 +173,78 @@ export default function BookDetail() {
           <ModalCloseButton />
           <ModalBody>
             <label>Student ID</label>
-            <Input 
-              type="number" 
+            <Input
+              type="number"
               name="id"
-              placeholder="Student ID" 
-              onChange={(e) => {setStudent({...student, id:parseInt(e.target.value)})}} 
+              placeholder="Student ID"
+              onChange={(e) => {
+                setStudent({ ...student, id: parseInt(e.target.value) });
+              }}
             />
-            {newStudent ? <>
-              <label>first name</label>
-              <Input 
-              type="text"
-              name="first_name" 
-              placeholder="First Name" 
-              onChange={(e) => {setStudent({...student, id: student?.id || 0, first_name: e.target.value})}} 
-            />
-            <label>Last Name</label>
-            <Input 
-              type="text"
-              name="last_name" 
-              placeholder="Last Name" 
-              onChange={(e) => {setStudent({...student, id: student?.id || 0, last_name: e.target.value})}} 
-            />
-            <label>Email</label>
-            <Input 
-              type="email"
-              name="email" 
-              placeholder="Email" 
-              onChange={(e) => {setStudent({...student, id: student?.id || 0, email: e.target.value})}} 
-            />
-              
-              
-              
-            </> : null}
+            {newStudent ? (
+              <>
+                <label>first name</label>
+                <Input
+                  type="text"
+                  name="first_name"
+                  placeholder="First Name"
+                  onChange={(e) => {
+                    setStudent({
+                      ...student,
+                      id: student?.id || 0,
+                      first_name: e.target.value,
+                    });
+                  }}
+                />
+                <label>Last Name</label>
+                <Input
+                  type="text"
+                  name="last_name"
+                  placeholder="Last Name"
+                  onChange={(e) => {
+                    setStudent({
+                      ...student,
+                      id: student?.id || 0,
+                      last_name: e.target.value,
+                    });
+                  }}
+                />
+                <label>Email</label>
+                <Input
+                  type="email"
+                  name="email"
+                  placeholder="Email"
+                  onChange={(e) => {
+                    setStudent({
+                      ...student,
+                      id: student?.id || 0,
+                      email: e.target.value,
+                    });
+                  }}
+                />
+              </>
+            ) : null}
           </ModalBody>
 
           <ModalFooter>
-            <Button colorScheme="blue" mr={3} onClick={() => { setNewStudent(false); onClose() }}>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => {
+                setNewStudent(false);
+                onClose();
+              }}
+            >
               Close
             </Button>
-            <Button variant="ghost" onClick={onSubmit}>Submit</Button>
+            <Button variant="ghost" onClick={onSubmit}>
+              Submit
+            </Button>
           </ModalFooter>
         </ModalContent>
       </Modal>
     </Box>
-
-  )
+  );
 }
 
 // export const getServerSideProps = async (context) => {

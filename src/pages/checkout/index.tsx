@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext, FormEvent } from "react"
+import { useEffect, useState, useContext, FormEvent } from "react";
 import {
   FormControl,
   Button,
@@ -16,7 +16,7 @@ import {
   Flex,
   Stack,
 } from "@chakra-ui/react";
-import { AuthContext, AuthContextType } from "../../providers"
+import { AuthContext, AuthContextType } from "../../providers";
 
 import Image from "next/image";
 import { Checkout } from "types/library";
@@ -35,13 +35,13 @@ export default function Books() {
     async function getCheckouts() {
       const response = await fetch(process.env.API_URL + "library/checkouts/", {
         headers: {
-          "Authorization": `Token ${auth.user.token}`
-        }
-      })
-      const checkouts = await response.json()
-      console.log(checkouts)
+          Authorization: `Token ${auth.user.token}`,
+        },
+      });
+      const checkouts = await response.json();
+      console.log(checkouts);
       if (checkouts instanceof Array) {
-        setCheckouts(checkouts as Array<Checkout>)
+        setCheckouts(checkouts as Array<Checkout>);
       }
     }
 
@@ -92,13 +92,12 @@ export default function Books() {
                   
                 </Box>
               </Flex>
-            )
+            );
           })}
         
 
         </Box>
       </Flex>{" "}
-
     </Box>
   );
 }
