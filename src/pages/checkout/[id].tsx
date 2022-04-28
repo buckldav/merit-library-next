@@ -1,6 +1,11 @@
 import { useContext, useEffect, useState, FormEvent } from 'react'
 import router, { useRouter } from 'next/router'
 //import fetch from "node-fetch"
+import {
+  Box,
+  Heading,
+  IconButton
+} from "@chakra-ui/react";
 
 import { Checkout } from "../../types/library"
 import { AuthContext, AuthContextType } from 'providers';
@@ -17,10 +22,6 @@ export default function CheckoutDetail() {
     const router = useRouter();
     const { auth } = useContext(AuthContext) as AuthContextType
     const [checkout, setCheckout] = useState<Checkout>()
-
-
-
-
 
 useEffect(() => {
     async function getCheckout() {
@@ -54,6 +55,10 @@ useEffect(() => {
   }, [auth])
 
 return (checkout ? <>
+    <Heading as="h1" size="xl" mb={4}>
+        Checked Out
+      </Heading>
+    <br/>
     <h1>Book: {checkout.book}</h1>
     <h1>ID: {checkout.id}</h1>
 </> : null

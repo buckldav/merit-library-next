@@ -35,7 +35,7 @@ export default function UpdateBook() {
   };
 
   const getDisabled = (key: Name) => {
-    return ["isbn", "image", "last_name", "first_name"].includes(key);
+    return ["isbn", "last_name", "first_name"].includes(key);
   };
 
   const onChange = (e: FormEvent) => {
