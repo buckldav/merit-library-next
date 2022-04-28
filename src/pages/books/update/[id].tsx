@@ -34,6 +34,10 @@ export default function UpdateBook() {
     }
   };
 
+  const getRequired = (key: Name) => {
+    return !["image"].includes(key);
+  };
+
   const getDisabled = (key: Name) => {
     return ["isbn", "last_name", "first_name"].includes(key);
   };
@@ -122,7 +126,7 @@ export default function UpdateBook() {
                   name={key}
                   id={key}
                   defaultValue={book[key as Name]}
-                  isRequired={true}
+                  isRequired={getRequired(key as Name)}
                   isDisabled={getDisabled(key as Name)}
                 />
               </div>
