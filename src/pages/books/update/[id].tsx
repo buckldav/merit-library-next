@@ -11,6 +11,7 @@ import {
   Heading,
   Alert,
   Box,
+  Flex,
 } from "@chakra-ui/react";
 import { Book } from "../../../types/library";
 import { AuthContext, AuthContextType } from "providers";
@@ -30,7 +31,11 @@ export default function UpdateBook() {
     if (key === "isbn") {
       return key.toUpperCase();
     } else {
-      return key.split("_").join(" ");
+      let text = key.split("_").join(" ");
+      if (key === "image") {
+        text += " URL";
+      }
+      return text;
     }
   };
 
@@ -106,36 +111,50 @@ export default function UpdateBook() {
         <Heading textAlign="center">Update Book</Heading>
         {error && <Alert>{error}</Alert>}
         {success && <Alert>{success}</Alert>}
-        <Box
-          as="form"
-          textAlign="center"
-          marginTop={4}
-          onChange={onChange}
-          onSubmit={onSubmit}
-        >
-          {book &&
-            Object.keys(book).map((key) => (
-              <div>
-                <FormLabel htmlFor={key}>
-                  {bookKeyToString(key as Name)}
-                </FormLabel>
-                <MyInput
-                  pr="4.5rem"
-                  type={key === "pages" ? "number" : "text"}
-                  placeholder={`Enter ${bookKeyToString(key as Name)}`}
-                  name={key}
-                  id={key}
-                  defaultValue={book[key as Name]}
-                  isRequired={getRequired(key as Name)}
-                  isDisabled={getDisabled(key as Name)}
-                />
-              </div>
-            ))}
+        <Flex justify="center" alignItems="flex-end" gridGap="8">
+          <Box
+            as="form"
+            textAlign="center"
+            marginTop={4}
+            onChange={onChange}
+            onSubmit={onSubmit}
+            minWidth={500}
+          >
+            {book &&
+              Object.keys(book).map((key) => (
+                <div>
+                  <FormLabel htmlFor={key}>
+                    {bookKeyToString(key as Name)}
+                  </FormLabel>
+                  <MyInput
+                    pr="4.5rem"
+                    type={
+                      key === "pages"
+                        ? "number"
+                        : key === "image"
+                        ? "url"
+                        : "text"
+                    }
+                    placeholder={`Enter ${bookKeyToString(key as Name)}`}
+                    name={key}
+                    id={key}
+                    defaultValue={book[key as Name]}
+                    isRequired={getRequired(key as Name)}
+                    isDisabled={getDisabled(key as Name)}
+                  />
+                </div>
+              ))}
 
-          <div>
-            <Input type="submit" value="Submit" bg="red.900" color="white" />
-          </div>
-        </Box>
+            <div>
+              <Input type="submit" value="Submit" bg="red.900" color="white" />
+            </div>
+          </Box>
+          {book?.image ? (
+            <img src={book?.image} height={100} />
+          ) : (
+            <img src="/Book_Placeholder.png" height={100} />
+          )}
+        </Flex>
       </Box>
     </>
   );
