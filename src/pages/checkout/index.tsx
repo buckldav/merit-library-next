@@ -29,7 +29,20 @@ export default function Books() {
   const [books, setBooks] = useState<Array<Book>>();
   const { auth } = useContext(AuthContext) as AuthContextType
 
-  
+  const onCheckIn = async (id: number) => {
+    const response = await fetch(process.env.API_URL + "library/checkouts/" + id, {
+      method: "PUT",
+      headers: {
+        Authorization: `Token ${auth.user.token}`,
+      },
+      body: JSON.stringify({
+        ...checkouts?.filter(val => val.id === id)[0],
+        checkin_time: new Date()
+      })
+    });
+    const json = await response.json();
+    console.log(json);
+  }
 
   useEffect(() => {
     async function getCheckouts() {
@@ -89,6 +102,7 @@ export default function Books() {
                   <Text fontSize={13}>Student: {checkout.student}</Text>
                   <Text fontSize={13}>Checkout Time: {checkout.checkout_time}</Text>
                   <Text fontSize={13}>Due Date: {checkout.due_date}</Text>
+                  <Button colorScheme="red" onClick={() => onCheckIn(checkout.id)}>Check in</Button>
                   
                 </Box>
               </Flex>

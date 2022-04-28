@@ -23,10 +23,6 @@ export default function CheckoutDetail() {
     const { auth } = useContext(AuthContext) as AuthContextType
     const [checkout, setCheckout] = useState<Checkout>()
 
-
-
-
-
 useEffect(() => {
     async function getCheckout() {
       let { id } = router.query;
