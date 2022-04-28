@@ -20,7 +20,7 @@ import {
   Flex,
   Stack,
 } from "@chakra-ui/react";
-import { Checkout } from "../../types/library"
+import { Book } from "../../types/library"
 import { AuthContext, AuthContextType } from 'providers';
 
 type Student = {
@@ -34,7 +34,7 @@ export default function BookDetail() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const router = useRouter();
 
-  const [book, setBook] = useState<Checkout>()
+  const [book, setBook] = useState<Book>()
   const [student, setStudent] = useState<Student>()
   const [newStudent, setNewStudent] = useState<boolean>(false)
   const { auth } = useContext(AuthContext) as AuthContextType
@@ -52,22 +52,24 @@ export default function BookDetail() {
     console.log("Student", res, json)
   }
 
-  async function postCheckout() {
-    const checkout = {
+  async function postBook() {
+    // post book to checkout
+    const bookBody = {
       book: book?.isbn,
       student: student?.id
     }
     const res = await fetch(process.env.API_URL + "library/checkouts/", {
       method: "POST",
-      body: JSON.stringify(checkout),
+      body: JSON.stringify(bookBody),
       headers: {
         "Authorization": `Token ${auth.user.token}`,
         "Content-Type": "application/json"
       }
     })
+    console.dir(res)
     const json = await res.json()
-    console.log(json)
-    router.push("/checkout/" + json.id)
+    console.log("Checkout", json)
+    router.push("/book/" + json.id)
   }
 
   const onSubmit = async (e: FormEvent) => {
@@ -83,19 +85,20 @@ export default function BookDetail() {
         }
       })
       const json = await res.json()
-      console.log(json)
+      console.log("Student", json)
       if (json.detail === "Not found.") {
         setNewStudent(true)
       } else {
-        // student found, post checkout
-        await postCheckout()
+        // student found, post Book
+        console.log("student found")
+        await postBook()
         onClose()
       }
     } else {
       // create student first
       await postStudent()
-        // post a checkout
-      await postCheckout()
+        // post a Book
+      await postBook()
       onClose()
     }
     
@@ -119,7 +122,8 @@ export default function BookDetail() {
             }
           })
           book = await response.json()
-          setBook(book as Checkout)
+          setBook(book as Book)
+          
         } catch (e) {
           console.error(e)
         }
