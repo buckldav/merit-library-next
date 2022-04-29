@@ -15,11 +15,14 @@ import {
   useDisclosure,
   Flex,
   Stack,
+  IconButton,
 } from "@chakra-ui/react";
 import { AuthContext, AuthContextType } from "../../providers";
 
 import Image from "next/image";
 import { Book } from "types/library";
+import { MyInput, MySelect } from "../../components"
+import { EmailIcon, ArrowDownIcon, SearchIcon } from "@chakra-ui/icons";
 
 export default function Books() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -48,6 +51,25 @@ export default function Books() {
       <Heading as="h1" size="xl" mb={4}>
         Book list
       </Heading>
+      <MyInput mb={5} placeholder="Search" />
+      <MySelect mb={1} placeholder="Select option">
+        <option value="all fields">All fields</option>
+        <option value="author">Author</option>
+        <option value="title">Title</option>
+        <option value="dewey decimal">Dewey decimal</option>
+      </MySelect>
+
+      <IconButton
+        colorScheme="blue"
+        aria-label="Search database"
+        icon={<SearchIcon />}
+      />
+
+
+
+
+
+
       <Flex direction="row">
         {/*<Image src="/dino.png" width={400} height={400} />*/}
         <Box>

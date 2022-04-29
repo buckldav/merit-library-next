@@ -20,7 +20,6 @@ const HomePage = () => {
         <option value="author">Author</option>
         <option value="title">Title</option>
         <option value="dewey decimal">Dewey decimal</option>
-        <option value="barcode">Barcode</option>
       </MySelect>
 
       <IconButton

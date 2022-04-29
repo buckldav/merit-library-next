@@ -9,19 +9,24 @@ import {
   FormHelperText,
   Modal,
   Heading,
+  InputGroup,
   Text,
   Link,
   Box,
   useDisclosure,
   Flex,
   Stack,
+  VStack,
+  IconButton
 } from "@chakra-ui/react";
 import { AuthContext, AuthContextType } from "../../providers";
 
+import { MyInput, MySelect } from "../../components"
 import Image from "next/image";
 import { Checkout } from "types/library";
 import { Book } from "types/library";
 import BookDetail from "pages/books/[id]";
+import { EmailIcon, ArrowDownIcon, SearchIcon } from "@chakra-ui/icons";
 
 export default function Books() {
   const { isOpen, onOpen, onClose } = useDisclosure();
@@ -81,7 +86,32 @@ export default function Books() {
       <Heading as="h1" size="xl" mb={4}>
         Checkouts list
       </Heading>
+
+      
+      <InputGroup size="md" borderColor="#A9B7E0">
+      <MyInput mb={5} placeholder="Search" />
+      <MySelect  mb={1} placeholder="Select option">
+        <option value="all fields">All fields</option>
+        <option value="author">Author</option>
+        <option value="title">Title</option>
+        <option value="student id">Student ID</option>
+        <option value="dewey decimal">Dewey decimal</option>
+      </MySelect>
+
+      <IconButton
+        colorScheme="blue"
+        aria-label="Search database"
+        icon={<SearchIcon />}
+      /></InputGroup>
+
+      
+      
+
+
+      
       <Flex direction="row">
+
+      
         {/*<Image src="/dino.png" width={400} height={400} />*/}
         <Box>
         
