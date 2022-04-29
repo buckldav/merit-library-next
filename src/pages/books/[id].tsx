@@ -52,12 +52,13 @@ export default function BookDetail() {
     console.log("Student", res, json);
   }
 
-  async function postBook() {
+  async function checkoutBook() {
     const bookData = {
       book: book?.isbn,
       student: student?.id,
     };
-    const res = await fetch(process.env.API_URL + "library/books/", {
+
+    const res = await fetch(process.env.API_URL + "library/checkouts/", {
       method: "POST",
       body: JSON.stringify(bookData),
       headers: {
@@ -65,9 +66,10 @@ export default function BookDetail() {
         "Content-Type": "application/json",
       },
     });
+    // console.log(res);
     const json = await res.json();
-    console.log(json);
-    router.push("/book/" + json.id);
+    // console.log(json);
+    router.push("/checkout/" + json.id);
   }
 
   const onSubmit = async (e: FormEvent) => {
@@ -91,14 +93,14 @@ export default function BookDetail() {
         setNewStudent(true);
       } else {
         // student found, post book
-        await postBook();
+        await checkoutBook();
         onClose();
       }
     } else {
       // create student first
       await postStudent();
       // post a book
-      await postBook();
+      await checkoutBook();
       onClose();
     }
   };
