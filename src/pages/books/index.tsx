@@ -24,15 +24,10 @@ import { Book } from "types/library";
 export default function Books() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [books, setBooks] = useState<Array<Book>>();
-  const { auth } = useContext(AuthContext) as AuthContextType;
 
   useEffect(() => {
     async function getBooks() {
-      const response = await fetch(process.env.API_URL + "library/books/", {
-        headers: {
-          Authorization: `Token ${auth.user.token}`,
-        },
-      });
+      const response = await fetch(process.env.API_URL + "library/books/");
       const books = await response.json();
       console.log(books);
       if (books instanceof Array) {
@@ -41,7 +36,7 @@ export default function Books() {
     }
 
     getBooks();
-  }, [auth]);
+  }, []);
 
   return (
     <Box mb={8} w="full">
@@ -49,7 +44,6 @@ export default function Books() {
         Book list
       </Heading>
       <Flex direction="row">
-        {/*<Image src="/dino.png" width={400} height={400} />*/}
         <Box>
           {books?.map((val) => {
             const book = val as Book;
