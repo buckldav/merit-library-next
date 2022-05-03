@@ -20,8 +20,9 @@ import {
   Flex,
   Stack,
 } from "@chakra-ui/react";
-import { Book } from "../../types/library";
+import { Book, } from "../../types/library";
 import { AuthContext, AuthContextType } from "providers";
+import { BookImage,  } from "../../components";
 
 type Student = {
   id: number;
@@ -143,11 +144,7 @@ export default function BookDetail() {
       <table>
         <tr>
           <td>
-            {book?.image ? (
-              <img src={book?.image} height={100} />
-            ) : (
-              <img src="/Book_Placeholder.png" height={100} />
-            )}
+            {book && <BookImage book={book} />}
             <Button as="a" href={`/books/update/${book?.isbn}`}>
               Edit Book
             </Button>

@@ -149,11 +149,7 @@ export default function UpdateBook() {
               <Input type="submit" value="Submit" bg="red.900" color="white" />
             </div>
           </Box>
-          {book?.image ? (
-            <img src={book?.image} height={100} />
-          ) : (
-            <img src="/Book_Placeholder.png" height={100} />
-          )}
+          <BookImage book={book} />
         </Flex>
       </Box>
     </>
