@@ -18,6 +18,7 @@ import { AuthContext, AuthContextType } from "providers";
 import { MyInput } from "../../../components/";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
+import { BookImage } from "../../../components";
 import { ColourOption, colourOptions } from "../data";
 import { ActionMeta, OnChangeValue } from "react-select";
 import fuzzySearch from "../../../utils/fuzzySearch";
@@ -220,7 +221,7 @@ export default function UpdateBook() {
               <Input type="submit" value="Submit" bg="red.900" color="white" />
             </div>
           </Box>
-          <BookImage book={book} />
+          {book && <BookImage book={book} />}
         </Flex>
       </Box>
     </>
