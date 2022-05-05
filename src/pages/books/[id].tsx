@@ -19,10 +19,11 @@ import {
   useDisclosure,
   Flex,
   Stack,
+  Alert,
 } from "@chakra-ui/react";
-import { Book, } from "../../types/library";
+import { Book } from "../../types/library";
 import { AuthContext, AuthContextType } from "providers";
-import { BookImage,  } from "../../components";
+import { BookImage } from "../../components";
 
 type Student = {
   id: number;
@@ -116,15 +117,9 @@ export default function BookDetail() {
       }
       console.log("ID", id);
       if (id && (id as string).match(/^(97(8|9))?\d{9}(\d|X)$/)) {
-        console.log("Token", auth.user.token);
         try {
           const response = await fetch(
-            process.env.API_URL + "library/books/" + id,
-            {
-              headers: {
-                Authorization: `Token ${auth.user.token}`,
-              },
-            }
+            process.env.API_URL + "library/books/" + id
           );
           book = await response.json();
           setBook(book as Book);
@@ -134,10 +129,8 @@ export default function BookDetail() {
       }
     }
 
-    if (auth.user.token) {
-      getBook();
-    }
-  }, [auth]);
+    getBook();
+  }, []);
 
   return (
     <Box>
@@ -159,9 +152,15 @@ export default function BookDetail() {
             <Text>call number: {book?.call_number}</Text> <br />
             <br />
             <br />
-            <Button colorScheme="red" onClick={onOpen}>
-              Check out
-            </Button>
+            {auth.user.token ? (
+              <Button colorScheme="red" onClick={onOpen}>
+                Check out
+              </Button>
+            ) : (
+              <Alert level="info">
+                A teacher must help you check out the book.
+              </Alert>
+            )}
           </td>
         </tr>
       </table>
@@ -171,7 +170,7 @@ export default function BookDetail() {
           <ModalHeader>Student ID</ModalHeader>
           <ModalCloseButton />
           <ModalBody>
-            <label>Student ID</label>
+            <label htmlFor="id">Student ID</label>
             <Input
               type="number"
               name="id"
@@ -182,7 +181,7 @@ export default function BookDetail() {
             />
             {newStudent ? (
               <>
-                <label>first name</label>
+                <label htmlFor="first_name">First Name</label>
                 <Input
                   type="text"
                   name="first_name"
@@ -195,7 +194,7 @@ export default function BookDetail() {
                     });
                   }}
                 />
-                <label>Last Name</label>
+                <label htmlFor="last_name">Last Name</label>
                 <Input
                   type="text"
                   name="last_name"
@@ -208,7 +207,7 @@ export default function BookDetail() {
                     });
                   }}
                 />
-                <label>Email</label>
+                <label htmlFor="email">Email</label>
                 <Input
                   type="email"
                   name="email"
