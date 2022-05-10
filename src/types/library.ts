@@ -15,12 +15,27 @@ export type BookData = {
   isbn: string;
 };
 
+export type Student = {
+  id: number;
+  first_name: string;
+  last_name: string;
+  email: string;
+}
+
 export type Checkout = {
   book: string;
-  student: number;
+  student: Student;
   checkout_time: string;
   due_date: string;
   id: number;
 
   //...
 };
+
+export type CheckoutRead = {
+  book: Book;
+  student: Student;
+  checkout_time: string;
+  due_date: string;
+  id: number;
+}

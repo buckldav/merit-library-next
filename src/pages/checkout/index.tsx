@@ -1,42 +1,30 @@
-import { useEffect, useState, useContext, FormEvent } from "react";
+import { useEffect, useState, useContext } from "react";
 import {
-  FormControl,
   Button,
-  ButtonGroup,
-  Input,
-  FormLabel,
-  FormErrorMessage,
-  FormHelperText,
-  Modal,
   Heading,
   InputGroup,
   Text,
   Link,
   Box,
-  useDisclosure,
   Flex,
-  Stack,
-  VStack,
   IconButton
 } from "@chakra-ui/react";
 import { AuthContext, AuthContextType } from "../../providers";
 
 import { MyInput, MySelect } from "../../components"
-import Image from "next/image";
-import { Checkout } from "types/library";
-import { Book } from "types/library";
-import BookDetail from "pages/books/[id]";
-import { EmailIcon, ArrowDownIcon, SearchIcon } from "@chakra-ui/icons";
+import { CheckoutRead } from "types/library";
+import { SearchIcon } from "@chakra-ui/icons";
 
 export default function Books() {
-  const { isOpen, onOpen, onClose } = useDisclosure();
-  const [checkouts, setCheckouts] = useState<Array<Checkout>>();
-  const [books, setBooks] = useState<Array<Book>>();
+  const [checkouts, setCheckouts] = useState<Array<CheckoutRead>>();
   const { auth } = useContext(AuthContext) as AuthContextType;
 
   const onCheckIn = async (id: number) => {
+    const c = checkouts?.filter((val) => val.id === id)[0];
     const checkout = JSON.stringify({
-      ...checkouts?.filter((val) => val.id === id)[0],
+      ...c,
+      book: c?.book.isbn,
+      student: c?.student.id,
       checkin_time: new Date(),
     });
     console.log(checkout);
@@ -67,26 +55,11 @@ export default function Books() {
       const checkouts = await response.json();
       console.log(checkouts);
       if (checkouts instanceof Array) {
-        setCheckouts(checkouts as Array<Checkout>);
+        setCheckouts(checkouts as Array<CheckoutRead>);
       }
     }
 
     getCheckouts();
-
-    async function getBooks() {
-      const response = await fetch(process.env.API_URL + "library/books/", {
-        headers: {
-          Authorization: `Token ${auth.user.token}`,
-        },
-      });
-      const books = await response.json();
-      console.log(books);
-      if (books instanceof Array) {
-        setBooks(books as Array<Book>);
-      }
-    }
-
-    getBooks();
   }, [auth]);
 
   return (
@@ -94,7 +67,6 @@ export default function Books() {
       <Heading as="h1" size="xl" mb={4}>
         Checkouts list
       </Heading>
-
 
       <InputGroup size="md" flexDirection="column" margin={"0 auto"} width="500px"  borderColor="#A9B7E0">
         <MyInput mb={5} placeholder="Search" />
@@ -117,19 +89,12 @@ export default function Books() {
       </InputGroup>
       
       <Flex direction="row">
-
-      
-        {/*<Image src="/dino.png" width={400} height={400} />*/}
         <Box>
-          {checkouts?.map((val) => {
-            const checkout = val as Checkout;
-            // const book = val as Book;
-            const book = {
-              image: null,
-            };
+          {checkouts?.map((checkout) => {
+            const book = checkout.book;
             return (
               <Flex direction="row" margin={5}>
-                <Link href={`/books/${checkout.id}`}>
+                <Link href={`/books/${book.isbn}`}>
                   {book.image ? (
                     <img src={book.image} height={100} />
                   ) : (
@@ -137,14 +102,17 @@ export default function Books() {
                   )}
                 </Link>
                 <Box margin={5}>
-                  <Text fontSize={13}>ID: {checkout.id}</Text>
-                  {/* <Text fontSize={13}>Title: {book.title}</Text> */}
-                  <Text fontSize={13}>ISBN: {checkout.book}</Text>
-                  <Text fontSize={13}>Student: {checkout.student}</Text>
-                  <Text fontSize={13}>
-                    Checkout Time: {checkout.checkout_time}
+                  <Text fontSize={15} fontWeight="bold">{book.title}</Text>
+                  <Text fontSize={15}>
+                    Author: {book.last_name}, {book.first_name}
                   </Text>
-                  <Text fontSize={13}>Due Date: {checkout.due_date}</Text>
+                  <Text fontSize={13}>Call Number: {book.call_number}</Text>
+                  <Text fontSize={13}>ISBN: {checkout.book.isbn}</Text>
+                  <Text fontSize={13}>Student: {checkout.student.first_name} {checkout.student.last_name}</Text>
+                  <Text fontSize={13}>
+                    Checkout Time: {new Date(checkout.checkout_time).toLocaleDateString()}
+                  </Text>
+                  <Text fontSize={13}>Due Date: {new Date(checkout.due_date).toLocaleDateString()}</Text>
                   <Button
                     colorScheme="red"
                     onClick={() => onCheckIn(checkout.id)}

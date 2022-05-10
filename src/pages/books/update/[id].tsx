@@ -15,7 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { Book } from "../../../types/library";
 import { AuthContext, AuthContextType } from "providers";
-import { MyInput } from "../../../components/";
+import { MyInput, BookImage } from "../../../components/";
 
 type Name = keyof Book;
 

@@ -67,9 +67,11 @@ export default function BookDetail() {
         "Content-Type": "application/json",
       },
     });
-    // console.log(res);
+    console.group("CHECKOUT")
+    console.log(res);
     const json = await res.json();
-    // console.log(json);
+    console.log(json);
+    console.groupEnd()
     router.push("/checkout/" + json.id);
   }
 
