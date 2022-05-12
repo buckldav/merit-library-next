@@ -55,7 +55,7 @@ export default function Books() {
       const checkouts = await response.json();
       console.log(checkouts);
       if (checkouts instanceof Array) {
-        setCheckouts(checkouts as Array<CheckoutRead>);
+        setCheckouts((checkouts as Array<CheckoutRead>).filter(c => c.book));
       }
     }
 
@@ -92,6 +92,7 @@ export default function Books() {
         <Box>
           {checkouts?.map((checkout) => {
             const book = checkout.book;
+            console.log(checkout)
             return (
               <Flex direction="row" margin={5}>
                 <Link href={`/books/${book.isbn}`}>
@@ -102,17 +103,15 @@ export default function Books() {
                   )}
                 </Link>
                 <Box margin={5}>
-                  <Text fontSize={15} fontWeight="bold">{book.title}</Text>
-                  <Text fontSize={15}>
-                    Author: {book.last_name}, {book.first_name}
-                  </Text>
-                  <Text fontSize={13}>Call Number: {book.call_number}</Text>
-                  <Text fontSize={13}>ISBN: {checkout.book.isbn}</Text>
-                  <Text fontSize={13}>Student: {checkout.student.first_name} {checkout.student.last_name}</Text>
-                  <Text fontSize={13}>
-                    Checkout Time: {new Date(checkout.checkout_time).toLocaleDateString()}
-                  </Text>
-                  <Text fontSize={13}>Due Date: {new Date(checkout.due_date).toLocaleDateString()}</Text>
+                  <Text fontSize={20} textDecoration="underline" fontWeight="bold">{book.title}</Text>
+                  <Flex direction="row" fontSize={13}><Text fontWeight="bold" marginRight={2}>Author: </Text> {book.last_name}, {book.first_name}</Flex>
+                  <Flex direction="row" fontSize={13}><Text fontWeight="bold" marginRight={2}>Call Number: </Text> {book.call_number}</Flex>
+                  <Flex direction="row" fontSize={13}><Text fontWeight="bold" marginRight={2}>ISBN: </Text> {checkout.book.isbn}</Flex>
+                  <Flex direction="row" fontSize={13}><Text fontWeight="bold" marginRight={2}>Student: </Text> {checkout.student.first_name} {checkout.student.last_name}</Flex>
+                  <Flex direction="row" fontSize={13}><Text fontWeight="bold" marginRight={2}>Checkout_Time: </Text> {new Date(checkout.checkout_time).toLocaleDateString()}
+                  </Flex>
+                  <Flex direction="row" fontSize={13}><Text fontWeight="bold" marginRight={2}>Due_Date: </Text> {new Date(checkout.due_date).toLocaleDateString()}</Flex>
+                  <br/>
                   <Button
                     colorScheme="red"
                     onClick={() => onCheckIn(checkout.id)}
