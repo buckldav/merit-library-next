@@ -13,11 +13,20 @@ import {
   Box,
   Flex,
 } from "@chakra-ui/react";
-import { Book } from "../../../types/library";
+import { Book, Author } from "../../../types/library";
 import { AuthContext, AuthContextType } from "providers";
 import { MyInput, BookImage } from "../../../components/";
+import Select from "react-select";
+import CreatableSelect from "react-select/creatable";
+import { ColourOption, colourOptions } from "../data";
+import { ActionMeta, OnChangeValue } from "react-select";
+import fuzzySearch from "../../../utils/fuzzySearch";
 
 type Name = keyof Book;
+type AuthorSelect = {
+  value: string;
+  label: string;
+};
 
 export default function UpdateBook() {
   const router = useRouter();
@@ -25,6 +34,8 @@ export default function UpdateBook() {
   const [error, setError] = useState<string | undefined>();
   const [success, setSuccess] = useState<string | undefined>();
   const [book, setBook] = useState<Book>();
+  const [isLoading, setIsLoading] = useState(false);
+  const [authors, setAuthors] = useState<AuthorSelect[]>();
   const { auth } = useContext(AuthContext) as AuthContextType;
 
   const bookKeyToString = (key: Name) => {
@@ -47,6 +58,23 @@ export default function UpdateBook() {
     return ["isbn", "last_name", "first_name"].includes(key);
   };
 
+  const setSelectableAuthors = (authorArr: Author[]) => {
+    const newAuthors = authorArr.map((author) => ({
+      label: `${author.last_name}, ${author.first_name}`,
+      value: author.id + "",
+    }));
+
+    if (authors) {
+      setAuthors((authors) => [...authors, newAuthors]);
+    } else {
+      setAuthors(newAuthors);
+    }
+  };
+
+  const getCurrentAuthor = (id: number) => {
+    return authors?.filter((author) => author.value == id)[0];
+  };
+
   const onChange = (e: FormEvent) => {
     const bData = { ...book } as Book;
     const el = e.target as HTMLInputElement;
@@ -55,7 +83,7 @@ export default function UpdateBook() {
   };
 
   const onSubmit = async (e: FormEvent) => {
-    console.log(process.env.API_URL);
+    //console.log(process.env.API_URL);
     e.preventDefault();
     let { id } = router.query;
 
@@ -72,6 +100,27 @@ export default function UpdateBook() {
     router.push("/books/" + json.isbn);
   };
 
+  const handleAuthorCreate = async (inputValue: string) => {
+    setIsLoading(true);
+    console.group("Option created");
+    console.log("Wait a moment...");
+    const [last_name, first_name] = inputValue.split(", ");
+    const res = await fetch(process.env.API_URL + `library/authors/`, {
+      method: "POST",
+      body: JSON.stringify({
+        first_name,
+        last_name,
+      }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Token ${auth.user.token}`,
+      },
+    });
+    const newAuthor = await res.json();
+    setBook({ ...book, author: newAuthor.id });
+    setSelectableAuthors([newAuthor]);
+  };
+
   useEffect(() => {
     async function getBook() {
       let { id } = router.query;
@@ -80,9 +129,7 @@ export default function UpdateBook() {
         const path = window.location.pathname.split("/");
         id = path[path.length - 1];
       }
-      console.log("ID", id);
       if (id && (id as string).match(/^(97(8|9))?\d{9}(\d|X)$/)) {
-        console.log("Token", auth.user.token);
         try {
           const response = await fetch(
             process.env.API_URL + "library/books/" + id,
@@ -100,10 +147,23 @@ export default function UpdateBook() {
       }
     }
 
+    async function getAuthors() {
+      const response = await fetch(process.env.API_URL + "library/authors/", {
+        headers: {
+          Authorization: `Token ${auth.user.token}`,
+        },
+      });
+      let authors = await response.json();
+      setSelectableAuthors(authors);
+    }
+
     if (auth.user.token) {
+      getAuthors();
       getBook();
     }
   }, [auth]);
+
+  useEffect(() => setIsLoading(false), [authors]);
 
   return (
     <>
@@ -126,22 +186,33 @@ export default function UpdateBook() {
                   <FormLabel htmlFor={key}>
                     {bookKeyToString(key as Name)}
                   </FormLabel>
-                  <MyInput
-                    pr="4.5rem"
-                    type={
-                      key === "pages"
-                        ? "number"
-                        : key === "image"
-                        ? "url"
-                        : "text"
-                    }
-                    placeholder={`Enter ${bookKeyToString(key as Name)}`}
-                    name={key}
-                    id={key}
-                    defaultValue={book[key as Name]}
-                    isRequired={getRequired(key as Name)}
-                    isDisabled={getDisabled(key as Name)}
-                  />
+                  {key === "author" ? (
+                    <CreatableSelect
+                      isDisabled={isLoading}
+                      isLoading={isLoading}
+                      options={authors}
+                      onCreateOption={handleAuthorCreate}
+                      defaultValue={getCurrentAuthor(book[key as Name])}
+                      name="author"
+                    />
+                  ) : (
+                    <MyInput
+                      pr="4.5rem"
+                      type={
+                        key === "pages"
+                          ? "number"
+                          : key === "image"
+                          ? "url"
+                          : "text"
+                      }
+                      placeholder={`Enter ${bookKeyToString(key as Name)}`}
+                      name={key}
+                      id={key}
+                      defaultValue={book[key as Name]}
+                      isRequired={getRequired(key as Name)}
+                      isDisabled={getDisabled(key as Name)}
+                    />
+                  )}
                 </div>
               ))}
 
@@ -149,7 +220,7 @@ export default function UpdateBook() {
               <Input type="submit" value="Submit" bg="red.900" color="white" />
             </div>
           </Box>
-          <BookImage book={book} />
+          {book && <BookImage book={book} />}
         </Flex>
       </Box>
     </>
