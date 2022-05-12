@@ -12,7 +12,7 @@ export function MySelect(props: SelectProps) {
 }
 
 export function BookImage(props: { book: Book }) {
-    return props.book.image ? (
+    return props.book && props.book.image ? (
         <img src={props.book.image} style={{width: "200px"}} />
       ) : (
         <img src="/Book_Placeholder.png" style={{width: "200px"}} />

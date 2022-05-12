@@ -6,7 +6,7 @@ import {
 } from "@chakra-ui/react";
 import { EmailIcon, ArrowDownIcon, SearchIcon } from "@chakra-ui/icons";
 import Image from "next/image";
-import { MyInput, MySelect } from "../components"
+import { MyInput, MySelect, } from "../components"
 
 const HomePage = () => {
   return (
