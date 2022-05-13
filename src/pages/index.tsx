@@ -2,7 +2,8 @@ import {
   Box,
   Heading,
   InputGroup,
-  IconButton
+  IconButton,
+  flexbox,
 } from "@chakra-ui/react";
 import { EmailIcon, ArrowDownIcon, SearchIcon } from "@chakra-ui/icons";
 import Image from "next/image";
@@ -13,7 +14,7 @@ const HomePage = () => {
 
     <Box mb={8} w="full" bg="white">
       <Heading as="h1" size="xl" mb={4}>
-        HOME
+        Merit Academy <br/> Library
       </Heading>
 
 
@@ -23,8 +24,7 @@ const HomePage = () => {
           <option value="all fields">All fields</option>
           <option value="author">Author</option>
           <option value="title">Title</option>
-          <option value="student id">Student ID</option>
-          <option value="dewey decimal">Dewey decimal</option>
+          <option value="call #">Call #</option>
         </MySelect>
         
 
@@ -36,6 +36,7 @@ const HomePage = () => {
           icon={<SearchIcon />}
         />
       </InputGroup>
+       <img style={{width: "50%", margin: "16px auto", display: "block"}} src="MeritLibrary.jpg"></img> 
     </Box>
 
   );

@@ -50,7 +50,7 @@ export default function Books() {
   return (
     <Box mb={8} w="full">
       <Heading as="h1" size="xl" mb={4}>
-        Book list
+        Books
       </Heading>
 
 
@@ -60,8 +60,7 @@ export default function Books() {
           <option value="all fields">All fields</option>
           <option value="author">Author</option>
           <option value="title">Title</option>
-          <option value="student id">Student ID</option>
-          <option value="dewey decimal">Dewey decimal</option>
+          <option value="call #">Call #</option>
         </MySelect>
         
 
