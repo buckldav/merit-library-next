@@ -7,9 +7,8 @@ Live site at [https://library.meritacademy.tech](https://library.meritacademy.te
 ## Setup
 
 ```bash
+cp .env.example .env.local
 npm install
-
-
 npm run dev
 
 ^^^^

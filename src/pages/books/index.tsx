@@ -19,6 +19,7 @@ import {
   IconButton,
 } from "@chakra-ui/react";
 import { AuthContext, AuthContextType } from "../../providers";
+import { PaginatedBooks } from "../../components/pagination"
 
 import Image from "next/image";
 import { Book } from "types/library";
@@ -72,54 +73,9 @@ export default function Books() {
 
 
 
-
-
-      <Flex direction="row">
-        <Box>
-          {books?.map((val) => {
-            const book = val as Book;
-            return (
-              <Flex direction="row" margin={5}>
-                <Link href={`/books/${book.isbn}`}>
-                  <BookImage book={book} />
-                </Link>
-                <Box margin={5}>
-                  <Text fontSize={20}>
-                    <Link href={`/books/${book.isbn}`}>{book.title}</Link>
-                  </Text>
-                  <Text fontSize={15}>
-                    {book.last_name}, {book.first_name}
-                  </Text>
-                  <Text fontSize={13}>Call Number: {book.call_number}</Text>
-                </Box>
-              </Flex>
-            );
-          })}
-        </Box>
-      </Flex>{" "}
+      <div id="container" >
+        <PaginatedBooks booksPerPage={15} />
+      </div>
     </Box>
   );
 }
-
-//<Modal isOpen={isOpen} onClose={onClose}>
-//   <ModalOverlay />
-//   <ModalContent>
-//     <ModalHeader>Student info</ModalHeader>
-//     <ModalCloseButton />
-//     <ModalBody>
-//       <Input placeholder="First name" />
-//       <Input placeholder="Last name" />
-//       <Input placeholder="Email" type="email" />
-//       <Input placeholder="Student id" />
-//     </ModalBody>
-
-//     <ModalFooter>
-//       <Button colorScheme="blue" mr={3} onClick={onClose}>
-//         Close
-//       </Button>
-//       <Button variant="ghost" onClick={onSubmit}>Submit</Button>
-//     </ModalFooter>
-//   </ModalContent>
-// </Modal>
-
-//one check out button, student gives id, if id is not in database, brings up the above modal to create new student, otherwise, the book is checked out
