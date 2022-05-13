@@ -1,9 +1,16 @@
 // TODO: Add tsx types for the library django models
+export type Author = {
+  last_name: string;
+  first_name: string;
+  id: number;
+};
+
 export type Book = {
   title: string;
   pages: number;
   last_name: string;
   first_name: string;
+  author: number;
   call_number: string;
   isbn: string;
   image?: string;
