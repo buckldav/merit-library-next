@@ -20,7 +20,7 @@ import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 import { ColourOption, colourOptions } from "../data";
 import { ActionMeta, OnChangeValue } from "react-select";
-import fuzzySearch from "../../../utils/fuzzySearch";
+import fuzzySearch from "../../../utils/search";
 
 type Name = keyof Book;
 type AuthorSelect = {

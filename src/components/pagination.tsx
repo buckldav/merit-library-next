@@ -28,7 +28,7 @@ type BooksProps = {
   books: Book[]
 }
 
-export function Books(props: PropsWithChildren<BooksProps>) {
+function Books(props: PropsWithChildren<BooksProps>) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
@@ -62,6 +62,7 @@ export function Books(props: PropsWithChildren<BooksProps>) {
 
 type PaginatedBooksProps = {
   booksPerPage: number;
+  allBooks: Book[] | undefined;
 }
 
 export function PaginatedBooks(props: PropsWithChildren<PaginatedBooksProps>) {
@@ -71,20 +72,7 @@ export function PaginatedBooks(props: PropsWithChildren<PaginatedBooksProps>) {
   // following the API or data you're working with.
   const [itemOffset, setItemOffset] = useState(0);
   const [books, setBooks] = useState<Array<Book>>();
-  const [allBooks, setAllBooks] = useState<Array<Book>>();
-  useEffect(() => {
-    // Get all books on page load
-    async function getBooks() {
-      const response = await fetch(process.env.API_URL + "library/books/");
-      const books = await response.json();
-      console.log(books);
-      if (books instanceof Array) {
-        setAllBooks(books as Array<Book>);
-      }
-    }
-
-    getBooks();
-  }, []);
+  const {allBooks} = props;
 
   useEffect(() => {
     // Get group of books
