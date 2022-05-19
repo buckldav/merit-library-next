@@ -1,4 +1,4 @@
-import { useEffect, useState, useContext } from "react";
+import { ChangeEvent, useEffect, useState, useContext } from "react";
 import {
   Button,
   Heading,
@@ -12,11 +12,14 @@ import {
 import { AuthContext, AuthContextType } from "../../providers";
 
 import { MyInput, MySelect } from "../../components"
-import { CheckoutRead } from "types/library";
+import { CheckoutRead, Book } from "types/library";
 import { SearchIcon } from "@chakra-ui/icons";
+import { shuffleCheckoutRead } from "utils/search";
+import { PaginatedBooks } from "../../components/pagination"
 
-export default function Books() {
+export default function Checkouts() {
   const [checkouts, setCheckouts] = useState<Array<CheckoutRead>>();
+  const [searchResults, setSearchResults] = useState<Array<CheckoutRead>>();
   const { auth } = useContext(AuthContext) as AuthContextType;
 
   const onCheckIn = async (id: number) => {
@@ -56,11 +59,42 @@ export default function Books() {
       console.log(checkouts);
       if (checkouts instanceof Array) {
         setCheckouts((checkouts as Array<CheckoutRead>).filter(c => c.book));
+        setSearchResults((checkouts as Array<CheckoutRead>).filter(c => c.book));
       }
     }
 
     getCheckouts();
   }, [auth]);
+
+
+  const handleSearch = (event: ChangeEvent) => {
+    const results:CheckoutRead[] = [];
+    const search = (event.target as HTMLInputElement).value.toLowerCase();
+    
+    //console.log((event.target as HTMLInputElement).value);
+    if (search.length >= 1) {
+      checkouts?.forEach((checkout) => {
+        const book = checkout.book;
+        if (book.title.toLowerCase().includes(search)) {
+          results.push(checkout);
+        } else if (book.first_name.toLowerCase().includes(search) || book.last_name.toLowerCase().includes(search)) {
+          results.push(checkout);
+        } else if (checkout.student.first_name.toLowerCase().includes(search) || checkout.student.last_name.toLowerCase().includes(search)) {
+          results.push(checkout);
+        }
+      });
+  
+      setSearchResults(results);
+    } else if (checkouts) {
+      setSearchResults(checkouts);
+    }
+  };
+
+
+
+
+
+
 
   return (
     <Box mb={8}  w="full">
@@ -69,28 +103,13 @@ export default function Books() {
       </Heading>
 
       <InputGroup size="md" flexDirection="column" margin={"0 auto"} width="500px"  borderColor="#A9B7E0">
-        <MyInput mb={5} placeholder="Search" />
-        <MySelect  mb={1} placeholder="Select option">
-          <option value="all fields">All fields</option>
-          <option value="author">Author</option>
-          <option value="title">Title</option>
-          <option value="student">Student</option>
-          <option value="call #">Call #</option>
-        </MySelect>
+        <MyInput mb={5} placeholder="Search" onChange={handleSearch} />
         
-
-        <IconButton
-          alignSelf="center"
-          width="200px"
-          colorScheme="gray"
-          aria-label="Search database"
-          icon={<SearchIcon />}
-        />
       </InputGroup>
       
       <Flex direction="row">
         <Box>
-          {checkouts?.map((checkout) => {
+          {searchResults?.map((checkout) => {
             const book = checkout.book;
             console.log(checkout)
             return (
@@ -124,6 +143,10 @@ export default function Books() {
           })}
         </Box>
       </Flex>{" "}
+
+      {/* <div id="container" >
+        <PaginatedBooks booksPerPage={15} allBooks={searchResults?.map(s => s.book) as Book[]} />
+      </div> */}
     </Box>
   );
 }
