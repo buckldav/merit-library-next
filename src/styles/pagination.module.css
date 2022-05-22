@@ -1,0 +1,35 @@
+.pagination {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    list-style-type: none;
+    /* border: 3px black solid;  */
+    padding: 0;
+    max-width: 600px;
+    margin: 8px auto;
+    gap: 4px;
+}
+
+.pagination li {
+    padding:12px;
+    border: 2px var(--chakra-colors-gray-100) solid;
+    border-radius: var(--chakra-radii-md);
+}
+
+/* #container {
+    display:flex; 
+    justify-content: space-around;
+    margin: 1rem;
+    font-size: 24px;
+} */
+  
+  /* .paginate {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    list-style-type: none;
+    border: 3px black solid; 
+    padding: 0;
+  } */
+  

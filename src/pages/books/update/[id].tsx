@@ -15,13 +15,12 @@ import {
 } from "@chakra-ui/react";
 import { Book, Author } from "../../../types/library";
 import { AuthContext, AuthContextType } from "providers";
-import { MyInput } from "../../../components/";
+import { MyInput, BookImage } from "../../../components/";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
-import { BookImage } from "../../../components";
 import { ColourOption, colourOptions } from "../data";
 import { ActionMeta, OnChangeValue } from "react-select";
-import fuzzySearch from "../../../utils/fuzzySearch";
+import fuzzySearch from "../../../utils/search";
 
 type Name = keyof Book;
 type AuthorSelect = {
