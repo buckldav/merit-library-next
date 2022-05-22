@@ -1,12 +1,17 @@
-import { FormLabel, Input, InputGroup, InputRightElement, Stack, VStack } from "@chakra-ui/react";
-import { FormEvent, useContext, useEffect, useState } from "react";
 import {
-  Button,
-  Heading,
+  FormLabel,
+  Input,
+  InputGroup,
+  InputRightElement,
+  Stack,
+  VStack,
 } from "@chakra-ui/react";
+import { FormEvent, useContext, useEffect, useState } from "react";
+import { Button, Heading } from "@chakra-ui/react";
 import { useRouter } from "next/router";
-import { MyInput } from "../components"
-import { AuthContext, AuthContextType } from "../providers"
+import { MyInput } from "../components";
+import { AuthContext, AuthContextType } from "../providers";
+import Cookies from "js-cookie";
 
 type Name = "username" | "password";
 
@@ -15,49 +20,51 @@ export default function SignIn() {
   const [show, setShow] = useState(false);
   const [userData, setUserData] = useState({
     username: "",
-    password: ""
+    password: "",
   });
-  const router = useRouter()
-  const { auth, setAuth } = useContext(AuthContext) as AuthContextType
+  const router = useRouter();
+  const { auth, setAuth } = useContext(AuthContext) as AuthContextType;
 
   const handleClick = () => setShow(!show);
 
   const onChange = (e: FormEvent) => {
-    const uData = { ...userData }
-    const el = (e.target as HTMLInputElement)
-    uData[el.name as Name] = el.value
-    setUserData(uData)
-  }
+    const uData = { ...userData };
+    const el = e.target as HTMLInputElement;
+    uData[el.name as Name] = el.value;
+    setUserData(uData);
+  };
 
   const onSubmit = async (e: FormEvent) => {
-    console.log(process.env.API_URL)
-    e.preventDefault()
+    console.log(process.env.API_URL);
+    e.preventDefault();
     try {
       const res = await fetch(process.env.API_URL + "auth-token/", {
         method: "POST",
         body: JSON.stringify(userData),
         headers: {
-          "Content-Type": "application/json"
-        }
-      })
-      const json = await res.json()
+          "Content-Type": "application/json",
+        },
+      });
+      const json = await res.json();
       if (res.status === 400) {
-        setError(true)
+        setError(true);
       }
-      console.log("JSON", json)
-      setAuth({ user: json })
-      localStorage.setItem("auth", JSON.stringify({ user: json }))
+      setAuth({ user: json });
+      Cookies.set("auth", JSON.stringify({ user: json }), {
+        secure: true,
+        sameSite: "strict",
+      });
     } catch (e) {
-      console.error(e)
+      console.error(e);
     }
-  }
+  };
 
   useEffect(() => {
-    auth.user.token && router.push("/")
-  }, [auth])
+    auth.user.token && router.push("/");
+  }, [auth]);
 
-  return (
-    auth.user.token ? null : <>
+  return auth.user.token ? null : (
+    <>
       <Stack spacing={3} paddingLeft="10%" paddingRight="10%">
         <Heading as="h1" size="xl" mb={4}>
           SIGN IN
@@ -97,11 +104,12 @@ export default function SignIn() {
           </VStack>
         </form>
       </Stack>
-      {error && <>
-      <br/>
-        <h1>Unable to Log In, Try Again.</h1>
-        
-      </>}
-      </>
+      {error && (
+        <>
+          <br />
+          <h1>Unable to Log In, Try Again.</h1>
+        </>
+      )}
+    </>
   );
 }

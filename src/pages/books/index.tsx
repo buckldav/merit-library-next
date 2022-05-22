@@ -22,7 +22,7 @@ import { AuthContext, AuthContextType } from "../../providers";
 
 import Image from "next/image";
 import { Book } from "types/library";
-import { BookImage, MyInput, MySelect } from "../../components"
+import { BookImage, MyInput, MySelect } from "../../components";
 import { EmailIcon, ArrowDownIcon, SearchIcon } from "@chakra-ui/icons";
 
 export default function Books() {
@@ -33,7 +33,6 @@ export default function Books() {
     async function getBooks() {
       const response = await fetch(process.env.API_URL + "library/books/");
       const books = await response.json();
-      console.log(books);
       if (books instanceof Array) {
         setBooks(books as Array<Book>);
       }
@@ -47,18 +46,21 @@ export default function Books() {
       <Heading as="h1" size="xl" mb={4}>
         Book list
       </Heading>
-
-
-      <InputGroup size="md" flexDirection="column" margin={"0 auto"} width="500px"  borderColor="#A9B7E0">
+      <InputGroup
+        size="md"
+        flexDirection="column"
+        margin={"0 auto"}
+        width="500px"
+        borderColor="#A9B7E0"
+      >
         <MyInput mb={5} placeholder="Search" />
-        <MySelect  mb={1} placeholder="Select option">
+        <MySelect mb={1} placeholder="Select option">
           <option value="all fields">All fields</option>
           <option value="author">Author</option>
           <option value="title">Title</option>
           <option value="student id">Student ID</option>
           <option value="dewey decimal">Dewey decimal</option>
         </MySelect>
-        
 
         <IconButton
           alignSelf="center"
@@ -68,12 +70,6 @@ export default function Books() {
           icon={<SearchIcon />}
         />
       </InputGroup>
-
-
-
-
-
-
       <Flex direction="row">
         <Box>
           {books?.map((val) => {

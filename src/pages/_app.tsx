@@ -17,6 +17,7 @@ import createEmotionCache from "styles/createEmotionCache";
 import customTheme from "styles/customTheme";
 import "styles/globals.css";
 import { Auth, AuthContext } from "../providers";
+import Cookies from "js-cookie";
 
 const clientSideEmotionCache = createEmotionCache();
 
@@ -31,18 +32,18 @@ const MyApp = ({
 }: MyAppProps) => {
   const [auth, setAuth] = useState<Auth>({
     user: {
-      token: null
-    }
-  })
+      token: null,
+    },
+  });
 
   useEffect(() => {
     if (!auth.user.token) {
-      const storedAuth = JSON.parse(localStorage.getItem("auth") as string)
+      const storedAuth = JSON.parse(Cookies.get("auth") as string);
       if (storedAuth?.user?.token) {
-        setAuth(storedAuth)
+        setAuth(storedAuth);
       }
     }
-  }, [])
+  }, []);
 
   return (
     <CacheProvider value={emotionCache}>
