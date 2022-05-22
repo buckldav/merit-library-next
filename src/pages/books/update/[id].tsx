@@ -96,14 +96,14 @@ export default function UpdateBook() {
       },
     });
     const json = await res.json();
-    console.log(json);
+    //console.log(json);
     router.push("/books/" + json.isbn);
   };
 
   const handleAuthorCreate = async (inputValue: string) => {
     setIsLoading(true);
-    console.group("Option created");
-    console.log("Wait a moment...");
+    // console.group("Option created");
+    // console.log("Wait a moment...");
     const [last_name, first_name] = inputValue.split(", ");
     const res = await fetch(process.env.API_URL + `library/authors/`, {
       method: "POST",
@@ -179,10 +179,11 @@ export default function UpdateBook() {
             onChange={onChange}
             onSubmit={onSubmit}
             minWidth={500}
+            color="red.800"
           >
             {book &&
               Object.keys(book).map((key) => (
-                <div>
+                <Box my={1}>
                   <FormLabel htmlFor={key}>
                     {bookKeyToString(key as Name)}
                   </FormLabel>
@@ -196,24 +197,26 @@ export default function UpdateBook() {
                       name="author"
                     />
                   ) : (
-                    <MyInput
-                      pr="4.5rem"
-                      type={
-                        key === "pages"
-                          ? "number"
-                          : key === "image"
-                          ? "url"
-                          : "text"
-                      }
-                      placeholder={`Enter ${bookKeyToString(key as Name)}`}
-                      name={key}
-                      id={key}
-                      defaultValue={book[key as Name]}
-                      isRequired={getRequired(key as Name)}
-                      isDisabled={getDisabled(key as Name)}
-                    />
+                    bookKeyToString(key as Name) && (
+                      <MyInput
+                        pr="4.5rem"
+                        type={
+                          key === "pages"
+                            ? "number"
+                            : key === "image"
+                            ? "url"
+                            : "text"
+                        }
+                        placeholder={`Enter ${bookKeyToString(key as Name)}`}
+                        name={key}
+                        id={key}
+                        defaultValue={book[key as Name]}
+                        isRequired={getRequired(key as Name)}
+                        isDisabled={getDisabled(key as Name)}
+                      />
+                    )
                   )}
-                </div>
+                </Box>
               ))}
 
             <div>

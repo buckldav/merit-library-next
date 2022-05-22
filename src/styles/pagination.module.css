@@ -15,6 +15,7 @@
     padding:12px;
     border: 2px var(--chakra-colors-gray-100) solid;
     border-radius: var(--chakra-radii-md);
+    color: var(--chakra-colors-red-800);
 }
 
 /* #container {

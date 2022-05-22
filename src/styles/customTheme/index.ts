@@ -1,13 +1,18 @@
-import { extendTheme } from "@chakra-ui/react";
-
 import colors from "./colors";
 import fonts from "./fonts";
-import styles from "./styles";
+import { DeepPartial, Theme } from "@chakra-ui/react";
+
+import { extendTheme } from "@chakra-ui/react";
 
 const customTheme = extendTheme({
-  fonts,
+  fonts: {
+    body: "Quicksand, sans-serif",
+    heading: "Cinzel, serif",
+    mono: "Mononoki, monospace",
+  },
   colors,
-  styles,
+  initialColorMode: "light",
+  useSystemColorMode: false,
 });
 
 export default customTheme;

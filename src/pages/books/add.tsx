@@ -1,27 +1,9 @@
 // @author: Mr. Buckley
 
-import {
-  Box,
-  Button,
-  Heading,
-  Image,
-  Text,
-  Link as ChakraLink,
-  useColorMode,
-  FormLabel,
-  Input,
-  InputGroup,
-  InputRightElement,
-  Stack,
-  VStack,
-  Alert,
-} from "@chakra-ui/react";
-import Link from "next/link";
-import { FormEvent, useContext, useEffect, useState } from "react";
-import { useRouter } from "next/router";
+import { Box, Heading, FormLabel, Input, Alert } from "@chakra-ui/react";
+import { FormEvent, useContext, useState } from "react";
 import { MyInput } from "../../components";
 import { AuthContext, AuthContextType } from "../../providers";
-import { BookData } from "types/library";
 
 type Name = "isbn" | "call_number" | "first_name" | "last_name";
 
@@ -100,8 +82,9 @@ const Add = () => {
           marginTop={4}
           onChange={onChange}
           onSubmit={onSubmit}
+          color="red.800"
         >
-          <div>
+          <Box my={2}>
             <FormLabel htmlFor="isbn">ISBN</FormLabel>
             <MyInput
               pr="4.5rem"
@@ -112,8 +95,8 @@ const Add = () => {
               isRequired={true}
               isDisabled={missingFields.length > 0}
             />
-          </div>
-          <div>
+          </Box>
+          <Box my={2}>
             <FormLabel htmlFor="callNumber">Call Number</FormLabel>
             <MyInput
               pr="4.5rem"
@@ -124,7 +107,7 @@ const Add = () => {
               isRequired={true}
               isDisabled={missingFields.length > 0}
             />
-          </div>
+          </Box>
           {missingFields.map((field) => {
             let label = field
               .split("_")
@@ -134,7 +117,7 @@ const Add = () => {
               ? "Author " + label
               : label;
             return (
-              <div>
+              <Box my={2}>
                 <FormLabel htmlFor={field}>{label}</FormLabel>
                 <MyInput
                   pr="4.5rem"
@@ -144,7 +127,7 @@ const Add = () => {
                   id={field}
                   isRequired={true}
                 />
-              </div>
+              </Box>
             );
           })}
           <div>

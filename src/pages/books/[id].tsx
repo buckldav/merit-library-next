@@ -68,11 +68,11 @@ export default function BookDetail() {
         "Content-Type": "application/json",
       },
     });
-    console.group("CHECKOUT")
-    console.log(res);
+    //console.group("CHECKOUT")
+    //console.log(res);
     const json = await res.json();
-    console.log(json);
-    console.groupEnd()
+    //console.log(json);
+    //console.groupEnd()
     router.push("/checkout/" + json.id);
   }
 
@@ -92,7 +92,7 @@ export default function BookDetail() {
         }
       );
       const json = await res.json();
-      console.log(json);
+      //console.log(json);
       if (json.detail === "Not found.") {
         setNewStudent(true);
       } else {
@@ -140,7 +140,11 @@ export default function BookDetail() {
         <tr>
           <td>
             {book && <BookImage book={book} />}
-            <Button as="a" href={`/books/update/${book?.isbn}`}>
+            <Button
+              as="a"
+              href={`/books/update/${book?.isbn}`}
+              colorScheme="red"
+            >
               Edit Book
             </Button>
           </td>
@@ -156,7 +160,7 @@ export default function BookDetail() {
             <br />
             {auth.user.token ? (
               <Button colorScheme="red" onClick={onOpen}>
-                Check out
+                Check Out
               </Button>
             ) : (
               <Alert level="info">
