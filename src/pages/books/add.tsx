@@ -74,8 +74,8 @@ const Add = () => {
     <>
       <Box marginY={4}>
         <Heading textAlign="center">Add Book</Heading>
-        {error && <Alert>{error}</Alert>}
-        {success && <Alert>{success}</Alert>}
+        {error && <Alert color="gray.900">{error}</Alert>}
+        {success && <Alert color="gray.900">{success}</Alert>}
         <Box
           as="form"
           textAlign="center"

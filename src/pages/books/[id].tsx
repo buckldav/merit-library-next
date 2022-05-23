@@ -141,6 +141,7 @@ export default function BookDetail() {
           <td>
             {book && <BookImage book={book} />}
             <Button
+              mt={2}
               as="a"
               href={`/books/update/${book?.isbn}`}
               colorScheme="red"

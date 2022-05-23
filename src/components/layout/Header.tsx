@@ -15,6 +15,7 @@ import {
 import router from "next/router";
 import Link from "next/link";
 import { AuthContext, AuthContextType } from "providers";
+import Cookies from "js-cookie";
 
 const navlinks = [
   { href: "/", text: "Home" },
@@ -78,6 +79,7 @@ const Header = () => {
                 <Button
                   onClick={() => {
                     setAuth({ user: { token: null } });
+                    Cookies.set("auth", "", { expires: 0 });
                     router.push("/");
                   }}
                 >

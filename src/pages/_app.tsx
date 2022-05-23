@@ -38,10 +38,12 @@ const MyApp = ({
 
   useEffect(() => {
     if (!auth.user.token) {
-      const storedAuth = JSON.parse(Cookies.get("auth") as string);
-      if (storedAuth?.user?.token) {
-        setAuth(storedAuth);
-      }
+      try {
+        const storedAuth = JSON.parse(Cookies.get("auth") as string);
+        if (storedAuth?.user?.token) {
+          setAuth(storedAuth);
+        }
+      } catch (e) {}
     }
   }, []);
 

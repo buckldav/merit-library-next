@@ -5,6 +5,7 @@ import {
   InputRightElement,
   Stack,
   VStack,
+  Box,
 } from "@chakra-ui/react";
 import { FormEvent, useContext, useEffect, useState } from "react";
 import { Button, Heading } from "@chakra-ui/react";
@@ -69,7 +70,7 @@ export default function SignIn() {
         <Heading as="h1" size="xl" mb={4}>
           SIGN IN
         </Heading>
-        <form onSubmit={onSubmit} onChange={onChange}>
+        <Box color="red.800" as="form" onSubmit={onSubmit} onChange={onChange}>
           <VStack gridGap={3}>
             <div>
               <FormLabel htmlFor="username">Username</FormLabel>
@@ -102,7 +103,7 @@ export default function SignIn() {
               <Input type="submit" value="Submit" bg="red.900" color="white" />
             </div>
           </VStack>
-        </form>
+        </Box>
       </Stack>
       {error && (
         <>
