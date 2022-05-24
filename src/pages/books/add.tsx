@@ -28,8 +28,8 @@ const Add = () => {
   };
 
   const onSubmit = async (e: FormEvent) => {
-    console.log(bookData);
-    console.log(process.env.API_URL);
+    // console.log(bookData);
+    // console.log(process.env.API_URL);
     e.preventDefault();
     try {
       const res = await fetch(process.env.API_URL + "library/books/", {

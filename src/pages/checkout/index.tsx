@@ -30,7 +30,7 @@ export default function Checkouts() {
       student: c?.student.id,
       checkin_time: new Date(),
     });
-    console.log(checkout);
+    // console.log(checkout);
     const response = await fetch(
       process.env.API_URL + "library/checkouts/" + id,
       {
@@ -43,7 +43,7 @@ export default function Checkouts() {
       }
     );
     const json = await response.json();
-    console.log(json);
+    // console.log(json);
     alert("Book Checked In!");
     window.location.reload();
   };
@@ -56,7 +56,7 @@ export default function Checkouts() {
         },
       });
       const checkouts = await response.json();
-      console.log(checkouts);
+      // console.log(checkouts);
       if (checkouts instanceof Array) {
         setCheckouts((checkouts as Array<CheckoutRead>).filter(c => c.book));
         setSearchResults((checkouts as Array<CheckoutRead>).filter(c => c.book));
@@ -111,7 +111,7 @@ export default function Checkouts() {
         <Box>
           {searchResults?.map((checkout) => {
             const book = checkout.book;
-            console.log(checkout)
+            // console.log(checkout)
             return (
               <Flex direction="row" margin={5}>
                 <Link href={`/books/${book.isbn}`}>
@@ -146,7 +146,7 @@ export default function Checkouts() {
 
       {/* <div id="container" >
         <PaginatedBooks booksPerPage={15} allBooks={searchResults?.map(s => s.book) as Book[]} />
-      </div> */}
+      </div>  */}
     </Box>
   );
 }
