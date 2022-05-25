@@ -19,9 +19,9 @@ export default function CheckoutDetail() {
         const path = window.location.pathname.split("/");
         id = path[path.length - 1];
       }
-      console.log("ID", id);
+      // console.log("ID", id);
       if (id) {
-        console.log("Token", auth.user.token);
+        // console.log("Token", auth.user.token);
         try {
           const response = await fetch(
             process.env.API_URL + "library/checkouts/" + id,
@@ -33,7 +33,7 @@ export default function CheckoutDetail() {
           );
           checkout = await response.json();
           setCheckout(checkout as Checkout);
-          console.log(checkout);
+          // console.log(checkout);
         } catch (e) {
           console.error(e);
         }
