@@ -51,7 +51,7 @@ export default function BookDetail() {
       },
     });
     const json = await res.json();
-    console.log("Student", res, json);
+    // console.log("Student", res, json);
   }
 
   async function checkoutBook() {
@@ -77,7 +77,7 @@ export default function BookDetail() {
   }
 
   const onSubmit = async (e: FormEvent) => {
-    console.log(process.env.API_URL);
+    // console.log(process.env.API_URL);
     e.preventDefault();
     if (!student?.email) {
       // get a student
@@ -117,7 +117,7 @@ export default function BookDetail() {
         const path = window.location.pathname.split("/");
         id = path[path.length - 1];
       }
-      console.log("ID", id);
+      // console.log("ID", id);
       if (id && (id as string).match(/^(97(8|9))?\d{9}(\d|X)$/)) {
         try {
           const response = await fetch(
