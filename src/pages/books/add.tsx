@@ -97,13 +97,25 @@ const Add = () => {
             />
           </Box>
           <Box my={2}>
-            <FormLabel htmlFor="callNumber">Call Number</FormLabel>
+            <FormLabel htmlFor="call_number">Call Number</FormLabel>
             <MyInput
               pr="4.5rem"
               type="tel"
               placeholder="Enter Merit Library Call Number"
               name="call_number"
               id="call_number"
+              isRequired={true}
+              isDisabled={missingFields.length > 0}
+            />
+          </Box>
+          <Box my={2}>
+            <FormLabel htmlFor="merit_barcode">Merit Barcode</FormLabel>
+            <MyInput
+              pr="4.5rem"
+              type="tel"
+              placeholder="Enter Merit Library Barcode"
+              name="merit_barcode"
+              id="merit_barcode"
               isRequired={true}
               isDisabled={missingFields.length > 0}
             />
